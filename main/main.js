@@ -1,7 +1,7 @@
 
 
 import { app, BrowserWindow, ipcMain, dialog, Notification } from "electron";
-import serve from "electron-serve";
+//import serve from "electron-serve";
 import path from "path";
 import fs from "fs";
 //const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -10,18 +10,20 @@ const __dirname = path.resolve();
 const appServe = app.isPackaged ? serve({
   directory: path.join(__dirname, "../out")
 }) : null;
-
+const preloadPath = path.resolve(__dirname,"main" ,"preload.js");
+console.log("Preload script path:", preloadPath); 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "main", "preload.js"),
+      preload: preloadPath,
       contextIsolation: true, 
       nodeIntegration: false, 
+      //sandbox: false
     }
   });
-  //mainWindow.loadURL('http://localhost:3000');
+  //win.loadURL('http://localhost:3000');
   if (app.isPackaged) {
     appServe(win).then(() => {
       win.loadURL("app://-");
@@ -64,13 +66,11 @@ ipcMain.on('set-title', (event, title) => {
   const win = BrowserWindow.fromWebContents(webContents)
   win.setTitle(title)
 })
-function showNotification() {
+
+ipcMain.handle('show-notification', () => {
   const notification = new Notification({
     title: 'Hello!',
     body: 'This is a system notification.',
   });
   notification.show();
-}
-ipcMain.handle('show-notification', () => {
-  showNotification();
 });

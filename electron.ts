@@ -1,12 +1,11 @@
+export interface IElectronAPI {
+  loadPreferences: () => Promise<void>;
+  getAppVersion: () => Promise<string>;
+  saveFile: (content: string) => Promise<string>;
+  showNotification: () => Promise<void>;
+}
 declare global {
-    interface Window {
-      electronAPI: {
-        getAppVersion: () => Promise<string>;
-        saveFile: (content: string) => Promise<string>;
-        showNotification: () => Promise<void>;
-      };
-    }
+  interface Window {
+    electronAPI: IElectronAPI;
   }
-  
-  // Ensure the declaration is global by adding `export {}` to avoid "module" errors.
-  export {};
+}

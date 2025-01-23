@@ -1,5 +1,6 @@
-
-import { contextBridge, ipcRenderer } from "electron";
+/* eslint-disable @typescript-eslint/no-require-imports */
+const { contextBridge,ipcRenderer } = require('electron/renderer');
+//import { contextBridge, ipcRenderer } from "electron";
 console.log("Preload script loaded");
 contextBridge.exposeInMainWorld("electronAPI", {
     on: (channel, callback) => {
